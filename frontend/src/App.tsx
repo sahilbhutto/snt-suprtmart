@@ -1,10 +1,10 @@
+import { Route, Routes } from "react-router-dom"
+import HomePage from "./pages/shop/HomePage"
 
-const App = () => {
-  return (
-    <>
-    <div className="text-4xl font-semibold text-center my-12">SNT Supermart Larkana</div>
-    </>
-  )
-}
+const App = () => (
+  <Routes>
+    <Route path="/" element={<HomePage/>} />
+  </Routes>
+)
 
 export default App
