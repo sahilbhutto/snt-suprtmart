@@ -24,7 +24,7 @@ const buttonSizes: Record<ButtonSize, string> = {
   sm: 'min-h-9 px-4 text-xs',
   md: 'min-h-11 px-5 text-sm',
   lg: 'min-h-13 px-7 text-base',
-  icon: 'size-11 p-0 text-lg',
+  icon: 'size-11 shrink-0 aspect-square p-0 text-lg',
 };
 
 const Button = ({ variant = 'primary', size = 'md', to, className, children, ...rest }: ButtonProps) => {
