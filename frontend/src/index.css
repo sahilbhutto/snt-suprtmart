@@ -61,6 +61,12 @@
   --shadow-pop-value: 0 18px 40px -12px rgb(14 26 20 / 0.18);
   --shadow-glow-value: 0 6px 16px rgb(21 128 61 / 0.22);
 
+    /* Flash deals panel */
+  --flash: #14532d;
+  --flash-foreground: #ffffff;
+  --flash-muted: #bbf7d0;
+  --flash-border: rgb(255 255 255 / 0.12);
+
   color-scheme: light;
 }
 
@@ -106,6 +112,11 @@
   --shadow-card-value: inset 0 1px 0 rgb(255 255 255 / 0.04), 0 24px 40px -28px rgb(0 0 0 / 0.8);
   --shadow-pop-value: 0 20px 48px -16px rgb(0 0 0 / 0.8);
   --shadow-glow-value: 0 8px 24px -10px rgb(198 244 50 / 0.45);
+
+    --flash: #0f2a1b;
+  --flash-foreground: #e8f0ea;
+  --flash-muted: #9db1a4;
+  --flash-border: #1d3126;
 
   color-scheme: dark;
 }
@@ -155,6 +166,11 @@
   --shadow-card: var(--shadow-card-value);
   --shadow-pop: var(--shadow-pop-value);
   --shadow-glow: var(--shadow-glow-value);
+
+    --color-flash: var(--flash);
+  --color-flash-foreground: var(--flash-foreground);
+  --color-flash-muted: var(--flash-muted);
+  --color-flash-border: var(--flash-border);
 
   /* English first, then Urdu and Arabic fallbacks */
   --font-sans:
@@ -206,6 +222,15 @@
   @keyframes slide-up { from { transform: translateY(12px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
   @keyframes pop { from { transform: scale(0.96); opacity: 0; } to { transform: scale(1); opacity: 1; } }
   @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  --animate-kenburns: kenburns 9s ease-out forwards;
+  --animate-progress: progress 5s linear forwards;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-float-slow: float 8s ease-in-out infinite reverse;
+
+  @keyframes kenburns { from { transform: scale(1); } to { transform: scale(1.09); } }
+  @keyframes progress { from { width: 0%; } to { width: 100%; } }
+  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 }
 
 /* ---------- Base ---------- */

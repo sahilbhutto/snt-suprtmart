@@ -2,29 +2,58 @@ import { Link, useNavigate } from "react-router-dom";
 import useTheme from "../../hooks/useTheme";
 import { useState, type FormEvent } from "react";
 import Container from "../ui/Container";
-import { LuHeart, LuLeaf, LuMapPin, LuMenu, LuMoon, LuSearch, LuShoppingCart, LuSun, LuTruck, LuUser } from "react-icons/lu";
-import { categories, navItems } from "../../data/home.data";
+import {
+  LuHeart,
+  LuLeaf,
+  LuMapPin,
+  LuMenu,
+  LuMoon,
+  LuSearch,
+  LuShoppingCart,
+  LuSun,
+  LuTruck,
+  LuUser,
+} from "react-icons/lu";
+import CategorySelect from "../ui/CategorySelect";
 import Button from "../ui/Button";
 import { formatPrice } from "../../lib/format";
+import CategoryMenu from "./CategoryMenu";
+import { navItems } from "../../data/home.data";
 import { cn } from "../../lib/cn";
+import { useCartStore, useCartSummary } from "../../store/cartStore";
+import MobileSidebar from "./MobileSidebar";
 
-const Header = ({ cartCount, cartTotal }: { cartCount: number; cartTotal: number }) => {
+const Header = () => {
+  const openCart = useCartStore((s) => s.open);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const { count, subtotal } = useCartSummary();
   const navigate = useNavigate();
   const { dark, toggle } = useTheme();
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
+  const [category, setCategory] = useState("");
 
   const handleSearch = (e: FormEvent) => {
     e.preventDefault();
-    navigate(`/products?q=${encodeURIComponent(query.trim())}`);
+    const params = new URLSearchParams();
+    if (query.trim()) params.set("q", query.trim());
+    if (category) params.set("category", category);
+    navigate(`/products?${params.toString()}`);
   };
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-surface/90 backdrop-blur-md">
       <Container>
         <div className="flex h-16 items-center gap-3 md:h-20 md:gap-4">
-          <button type="button" aria-label="Open menu" className="grid size-10 place-items-center rounded-full border border-border lg:hidden">
+          <Button
+            variant="secondary"
+            size="icon"
+            onClick={() => setMenuOpen(true)}
+            aria-label="Open menu"
+            aria-haspopup="dialog"
+            className="lg:hidden"
+          >
             <LuMenu />
-          </button>
+          </Button>
 
           <Link to="/" className="flex items-center gap-2.5">
             <span className="grid size-10 place-items-center rounded-xl bg-ink text-accent">
@@ -35,21 +64,26 @@ const Header = ({ cartCount, cartTotal }: { cartCount: number; cartTotal: number
             </b>
           </Link>
 
-          <button type="button" className="hidden min-w-44 items-center gap-2 rounded-full border border-border px-4 py-1.5 text-left lg:flex">
+          <button
+            type="button"
+            className="hidden min-w-44 items-center gap-2 rounded-full border border-border px-4 py-1.5 text-left lg:flex"
+          >
             <LuMapPin />
             <span className="leading-tight">
-              <span className="block text-[11px] text-muted-foreground">Deliver to</span>
+              <span className="block text-[11px] text-muted-foreground">
+                Deliver to
+              </span>
               <span className="text-sm font-semibold">Select area</span>
             </span>
           </button>
 
-          <form onSubmit={handleSearch} role="search" className="hidden flex-1 items-center rounded-full border border-border bg-background p-1 md:flex">
-            <select aria-label="Category" className="w-36 bg-transparent px-3 text-sm outline-none">
-              <option>All categories</option>
-              {categories.map((c) => (
-                <option key={c.slug}>{c.name}</option>
-              ))}
-            </select>
+          <form
+            onSubmit={handleSearch}
+            role="search"
+            className="hidden flex-1 items-center rounded-full border border-border bg-background p-1 md:flex"
+          >
+            <CategorySelect value={category} onChange={setCategory} />
+            <span className="mx-1 h-6 w-px bg-border" aria-hidden />
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -57,36 +91,79 @@ const Header = ({ cartCount, cartTotal }: { cartCount: number; cartTotal: number
               placeholder="Search 70,000+ products"
               className="min-w-0 flex-1 bg-transparent px-3 text-sm outline-none placeholder:text-subtle-foreground"
             />
-            <Button size="icon" type="submit" aria-label="Search" className="size-10">
+            <Button
+              size="icon"
+              type="submit"
+              aria-label="Search"
+              className="size-10"
+            >
               <LuSearch />
             </Button>
           </form>
 
           <span className="flex-1 md:hidden" />
 
-          <Button variant="secondary" size="icon" onClick={toggle} aria-label={dark ? 'Switch to light theme' : 'Switch to dark theme'}>
+          <Button
+            variant="secondary"
+            size="icon"
+            onClick={toggle}
+            aria-label={dark ? "Switch to light theme" : "Switch to dark theme"}
+            className="h-12 w-12"
+          >
             {dark ? <LuSun /> : <LuMoon />}
           </Button>
-          <Button variant="secondary" size="icon" to="/account/wishlist" aria-label="Wishlist" className="hidden sm:inline-flex">
+
+          <Button
+            variant="secondary"
+            size="icon"
+            to="/account/wishlist"
+            aria-label="Wishlist"
+            className="hidden lg:inline-flex"
+          >
             <LuHeart />
           </Button>
-          <Button variant="secondary" size="icon" to="/account" aria-label="Account" className="hidden sm:inline-flex">
+          <Button
+            variant="secondary"
+            size="icon"
+            to="/account"
+            aria-label="Account"
+            className="hidden lg:inline-flex"
+          >
             <LuUser />
           </Button>
-          <Button variant="ink" to="/cart" className="gap-2.5">
+
+          <Button
+            variant="ink"
+            size="icon"
+            onClick={openCart}
+            aria-label={`Open cart, ${count} items`}
+            aria-haspopup="dialog"
+            className="relative sm:w-auto sm:gap-2.5 sm:px-4"
+          >
             <LuShoppingCart size={18} />
-            <span className="hidden sm:inline tabular-nums">{formatPrice(cartTotal)}</span>
-            <span className="grid min-w-6 place-items-center rounded-full bg-accent px-1.5 text-xs text-accent-foreground">{cartCount}</span>
+            <span className="hidden text-sm tabular-nums sm:inline">
+              {formatPrice(subtotal)}
+            </span>
+            <span className="absolute -right-1 -top-1 grid min-w-5 place-items-center rounded-full bg-accent px-1 text-[11px] font-bold text-accent-foreground sm:static sm:min-w-6 sm:px-1.5 sm:text-xs">
+              {count}
+            </span>
           </Button>
         </div>
 
-        <nav aria-label="Categories" className="hidden h-12 items-center gap-7 text-sm font-semibold lg:flex">
-          <Link to="/categories" className="flex items-center gap-2 rounded-full bg-ink px-4 py-2 text-ink-foreground">
-            <LuMenu size={16} className="text-accent" />
-            All categories
-          </Link>
+        <nav
+          aria-label="Categories"
+          className="hidden h-12 items-center gap-7 text-sm font-semibold lg:flex"
+        >
+          <CategoryMenu />
           {navItems.map((item) => (
-            <Link key={item.to} to={item.to} className={cn('transition hover:text-link', item.highlight && 'text-deal')}>
+            <Link
+              key={item.to}
+              to={item.to}
+              className={cn(
+                "transition hover:text-link",
+                item.highlight && "text-deal",
+              )}
+            >
               {item.label}
             </Link>
           ))}
@@ -95,9 +172,25 @@ const Header = ({ cartCount, cartTotal }: { cartCount: number; cartTotal: number
           </span>
         </nav>
       </Container>
+      <form
+        onSubmit={handleSearch}
+        role="search"
+        className="pb-3 px-3 md:hidden"
+      >
+        <div className="flex items-center gap-2 rounded-full border border-border bg-background px-4">
+          <LuSearch className="shrink-0 text-muted-foreground" />
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            aria-label="Search products"
+            placeholder="Search 70,000+ products"
+            className="h-11 min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-subtle-foreground"
+          />
+        </div>
+      </form>
+      <MobileSidebar open={menuOpen} onClose={() => setMenuOpen(false)} />
     </header>
   );
 };
 
-
-export default Header
+export default Header;

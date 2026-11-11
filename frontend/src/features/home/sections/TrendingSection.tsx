@@ -2,10 +2,10 @@ import { useMemo, useState } from "react";
 import { products, trendingTabs } from "../../../data/home.data";
 import Container from "../../../components/ui/Container";
 import ProductCard from "../../../components/product/ProductCard";
-import type { CartState, TrendingTab } from "../../../types/catalog";
+import type { TrendingTab } from "../../../types/catalog";
 import { cn } from "../../../lib/cn";
 
-const TrendingSection = ({ cart, onAdd, onRemove }: { cart: CartState; onAdd: (id: string) => void; onRemove: (id: string) => void }) => {
+const TrendingSection = () => {
   const [tab, setTab] = useState<TrendingTab>('trending');
 
   const items = useMemo(() => {
@@ -46,7 +46,7 @@ const TrendingSection = ({ cart, onAdd, onRemove }: { cart: CartState; onAdd: (i
 
         <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
           {items.map((p) => (
-            <ProductCard key={p.id} product={p} quantity={cart[p.id] ?? 0} onAdd={onAdd} onRemove={onRemove} />
+            <ProductCard key={p.id} product={p}/>
           ))}
         </div>
       </Container>
