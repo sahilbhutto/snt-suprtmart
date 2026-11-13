@@ -1,25 +1,15 @@
 import { useMemo, useState } from "react";
-import { products, trendingTabs } from "../../../data/home.data";
+import {  trendingTabs } from "../../../data/home.data";
 import Container from "../../../components/ui/Container";
-import ProductCard from "../../../components/product/ProductCard";
+import ProductCard from "../../products/components/ProductCard";
 import type { TrendingTab } from "../../../types/catalog";
 import { cn } from "../../../lib/cn";
+import { getTrendingProducts } from "../../../data/catalog.selectors";
 
 const TrendingSection = () => {
   const [tab, setTab] = useState<TrendingTab>('trending');
 
-  const items = useMemo(() => {
-    switch (tab) {
-      case 'new':
-        return products.filter((p) => p.badge === 'New' || p.badge === 'Fresh').concat(products.slice(5, 10)).slice(0, 10);
-      case 'top-rated':
-        return [...products].sort((a, b) => b.rating - a.rating).slice(0, 10);
-      case 'under-500':
-        return products.filter((p) => p.price < 500).slice(0, 10);
-      default:
-        return [...products].sort((a, b) => b.sold - a.sold).slice(0, 10);
-    }
-  }, [tab]);
+ const items = useMemo(() => getTrendingProducts(tab), [tab]);
 
   return (
     <section>
