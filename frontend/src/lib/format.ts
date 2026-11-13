@@ -1,9 +1,16 @@
 import type { Tint } from "../types/catalog";
 
-export const formatPrice = (value: number) => `Rs. ${value.toLocaleString('en-PK')}`;
+/** Safe number formatter – never throws on undefined/null/NaN */
+export const formatPrice = (value: number | null | undefined): string => {
+  if (value == null || Number.isNaN(value)) return "Rs. —";
+  return `Rs. ${value.toLocaleString("en-PK")}`;
+};
 
-export const formatCount = (value: number) => value.toLocaleString('en-PK');
-
+/** Safe count formatter – never throws on undefined/null/NaN */
+export const formatCount = (value: number | null | undefined): string => {
+  if (value == null || Number.isNaN(value)) return "0";
+  return value.toLocaleString("en-PK");
+};
 
 export const tintBg: Record<Tint, string> = {
   1: "bg-tint-1",

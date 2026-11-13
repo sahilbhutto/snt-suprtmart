@@ -1,9 +1,20 @@
 import { Route, Routes } from "react-router-dom"
-import HomePage from "./pages/shop/HomePage"
+import HomePage from "./pages/public/HomePage"
+import CategoryPage from "./pages/public/CategoryPage"
+import MainLayout from "./components/layout/main/MainLayout"
+import NotFoundPage from "./pages/NotFoundPage"
+import AllCategoriesPage from "./pages/public/AllCategoriesPage"
 
 const App = () => (
   <Routes>
-    <Route path="/" element={<HomePage/>} />
+    <Route element={<MainLayout />}>
+      <Route index element={<HomePage />} />
+      <Route path="categories" element={<AllCategoriesPage />} />
+      <Route path="category/:slug" element={<CategoryPage />} />
+
+      <Route path="*" element={<NotFoundPage />} />
+
+    </Route>
   </Routes>
 )
 

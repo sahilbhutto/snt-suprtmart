@@ -191,151 +191,162 @@ const HeroSection = () => {
               </dl>
             </div>
 
-            {/* ================= RIGHT: photo showcase ================= */}
-            <div
-              role="group"
-              aria-roledescription="carousel"
-              aria-label="Photos of our stores"
-              tabIndex={0}
-              onKeyDown={handleKeyDown}
-              onMouseMove={handleMouseMove}
-              onMouseEnter={() => setPaused(true)}
-              onMouseLeave={handleMouseLeave}
-              onTouchStart={(e) => setTouchStartX(e.touches[0].clientX)}
-              onTouchEnd={handleTouchEnd}
-              className="relative aspect-5/6 overflow-hidden rounded-3xl bg-ink-border outline-none ring-1 ring-white/10 focus-visible:ring-2 focus-visible:ring-accent sm:aspect-16/11 lg:aspect-auto lg:min-h-140"
+           {/* ================= RIGHT: photo showcase ================= */}
+<div
+  role="group"
+  aria-roledescription="carousel"
+  aria-label="Photos of our stores"
+  tabIndex={0}
+  onKeyDown={handleKeyDown}
+  onMouseMove={handleMouseMove}
+  onMouseEnter={() => setPaused(true)}
+  onMouseLeave={handleMouseLeave}
+  onTouchStart={(e) => setTouchStartX(e.touches[0].clientX)}
+  onTouchEnd={handleTouchEnd}
+  className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-ink-border outline-none ring-1 ring-white/10 focus-visible:ring-2 focus-visible:ring-accent sm:aspect-[16/11] sm:rounded-3xl lg:aspect-auto lg:min-h-[520px]"
+>
+  {/* Photos */}
+  {heroSlides.map((s, i) => (
+    <img
+      key={s.id}
+      src={s.image}
+      alt={s.alt}
+      width={900}
+      height={1000}
+      loading={i === 0 ? "eager" : "lazy"}
+      decoding="async"
+      aria-hidden={i !== index}
+      className={cn(
+        "absolute inset-0 size-full object-cover transition-all duration-700 ease-out",
+        i === index
+          ? "opacity-100 scale-100"
+          : "opacity-0 scale-105",
+        i === index && !reduced && "animate-kenburns",
+      )}
+    />
+  ))}
+
+  <div
+    aria-hidden
+    className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/40"
+  />
+  <div
+    aria-hidden
+    className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/50 to-transparent"
+  />
+
+  <div className="absolute inset-x-3 top-3 z-20 flex gap-1.5 sm:inset-x-5 sm:top-4 sm:gap-2">
+    {heroSlides.map((s, i) => (
+      <button
+        key={s.id}
+        type="button"
+        onClick={() => go(i)}
+        aria-label={`Show photo ${i + 1}: ${s.title}`}
+        aria-current={i === index}
+        className="group relative h-8 flex-1 touch-manipulation"
+      >
+        <span
+          className={cn(
+            "absolute inset-x-0 top-1/2 h-[3px] -translate-y-1/2 overflow-hidden rounded-full transition-all duration-300",
+            i === index
+              ? "bg-accent/30 shadow-[0_0_12px_rgba(var(--accent),0.45)]"
+              : "bg-white/25 group-hover:bg-white/40",
+          )}
+        >
+          <span
+            className={cn(
+              "block h-full rounded-full origin-left",
+              i < index && "w-full bg-accent",
+              i === index &&
+                (reduced
+                  ? "w-full bg-accent"
+                  : "animate-progress bg-accent"),
+              i > index && "w-0 bg-accent",
+            )}
+            style={
+              i === index
+                ? { animationPlayState: paused ? "paused" : "running" }
+                : undefined
+            }
+            onAnimationEnd={i === index && !reduced ? next : undefined}
+          />
+        </span>
+      </button>
+    ))}
+  </div>
+
+  {/* Caption + controls (bottom) */}
+  <div className="absolute inset-x-0 bottom-0 z-20 p-3 sm:p-5">
+    <div className="flex items-end justify-between gap-3">
+      <div className="min-w-0 flex-1">
+
+        <div className="hidden items-center gap-1.5 sm:flex">
+          {heroSlides.map((s, i) => (
+            <button
+              key={s.id}
+              type="button"
+              onClick={() => go(i)}
+              aria-label={`Show ${s.title}`}
+              className={cn(
+                "relative size-10 shrink-0 overflow-hidden rounded-xl transition-all duration-300 sm:size-11",
+                i === index
+                  ? "ring-2 ring-accent ring-offset-2 ring-offset-black/40 scale-105 shadow-lg shadow-accent/20"
+                  : "opacity-60 ring-1 ring-white/20 hover:opacity-100 hover:ring-white/40",
+              )}
             >
-              {/* Photos */}
-              {heroSlides.map((s, i) => (
-                <img
-                  key={s.id}
-                  src={s.image}
-                  alt={s.alt}
-                  width={900}
-                  height={1000}
-                  loading={i === 0 ? "eager" : "lazy"}
-                  decoding="async"
-                  aria-hidden={i !== index}
-                  className={cn(
-                    "absolute inset-0 size-full object-cover transition-opacity duration-1000",
-                    i === index ? "opacity-100" : "opacity-0",
-                    i === index && !reduced && "animate-kenburns",
-                  )}
-                />
-              ))}
+              <img
+                src={s.image}
+                alt=""
+                width={88}
+                height={88}
+                loading="lazy"
+                className="size-full object-cover"
+              />
+            </button>
+          ))}
+        </div>
+      </div>
 
-              {/* Readability overlays */}
-              <div aria-hidden className="absolute inset-x-0 top-0 h-32 bg-linear-to-b from-black/55 to-transparent" />
-              <div aria-hidden className="absolute inset-x-0 bottom-0 h-56 bg-linear-to-t from-black/75 to-transparent" />
+      {/* Navigation controls – always visible, compact on mobile */}
+      <div className="flex items-center gap-1.5 sm:gap-2">
+        <button
+          type="button"
+          onClick={prev}
+          aria-label="Previous photo"
+          className="grid size-9 place-items-center rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-md transition-all hover:bg-white/25 hover:border-white/30 active:scale-95 sm:size-10"
+        >
+          <LuChevronLeft className="size-4 sm:size-5 rtl:rotate-180" />
+        </button>
+        <button
+          type="button"
+          onClick={next}
+          aria-label="Next photo"
+          className="grid size-9 place-items-center rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-md transition-all hover:bg-white/25 hover:border-white/30 active:scale-95 sm:size-10"
+        >
+          <LuChevronRight className="size-4 sm:size-5 rtl:rotate-180" />
+        </button>
+      </div>
+    </div>
 
-              {/* Story progress bars (click to jump) */}
-              <div className="absolute inset-x-4 top-3 z-10 flex gap-1.5 sm:inset-x-6 sm:top-5">
-                {heroSlides.map((s, i) => (
-                  <button
-                    key={s.id}
-                    type="button"
-                    onClick={() => go(i)}
-                    aria-label={`Show photo ${i + 1}: ${s.title}`}
-                    aria-current={i === index}
-                    className="h-6 flex-1 py-2.5"
-                  >
-                    <span className="block h-1 overflow-hidden rounded-full bg-white/30">
-                      <span
-                        className={cn(
-                          "block h-full rounded-full bg-white",
-                          i < index && "w-full",
-                          i === index && (reduced ? "w-full" : "animate-progress"),
-                        )}
-                        style={i === index ? { animationPlayState: paused ? "paused" : "running" } : undefined}
-                        onAnimationEnd={i === index && !reduced ? next : undefined}
-                      />
-                    </span>
-                  </button>
-                ))}
-              </div>
-
-              {/* Floating: deal chip */}
-              <div className="absolute left-4 top-14 z-10 sm:left-6 sm:top-16" style={drift(10)}>
-                <div className="animate-float">
-                  <Link
-                    to="/category/fruits-veg"
-                    className="flex items-center gap-2.5 rounded-2xl border border-white/20 bg-white/15 py-2 pe-4 ps-2 text-white shadow-pop backdrop-blur-md transition hover:bg-white/25"
-                  >
-                    <span className="grid size-9 place-items-center rounded-xl bg-accent text-sm font-extrabold text-accent-foreground">
-                      -20%
-                    </span>
-                    <span className="text-xs leading-tight">
-                      <b className="block text-sm">Fruit box Rs. 999</b>
-                      Weekend deal
-                    </span>
-                  </Link>
-                </div>
-              </div>
-
-              {/* Floating: live order card (sample, hidden on small phones) */}
-              <div className="absolute right-4 top-1/3 z-10 hidden w-56 sm:block lg:right-6" style={drift(-16)}>
-                <div className="animate-float-slow rounded-2xl border border-white/20 bg-black/35 p-3.5 text-white shadow-pop backdrop-blur-md">
-                  <div className="flex items-center gap-3">
-                    <span className="grid size-10 shrink-0 place-items-center rounded-full bg-accent text-accent-foreground">
-                      <LuTruck size={18} />
-                    </span>
-                    <span className="text-xs leading-tight">
-                      <b className="block text-sm">Order #10482</b>
-                      Imran is 12 min away
-                    </span>
-                  </div>
-                  <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/20">
-                    <div className="h-full w-[72%] rounded-full bg-accent" />
-                  </div>
-                </div>
-              </div>
-
-              {/* Caption + controls */}
-              <div className="absolute inset-x-0 bottom-0 z-10 flex flex-wrap items-end justify-between gap-3 p-4 sm:p-6">
-                <div key={slide.id} className="max-w-[16rem] animate-slide-up rounded-2xl border border-white/20 bg-white/15 p-3.5 text-white backdrop-blur-md sm:max-w-xs">
-                  <span className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.08em] text-accent">
-                    <LuMapPin size={12} /> {index + 1} / {total}
-                  </span>
-                  <b className="mt-1 block text-base leading-tight sm:text-lg">{slide.title}</b>
-                  <span className="text-xs text-white/80">{slide.caption}</span>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <div className="hidden gap-2 md:flex">
-                    {heroSlides.map((s, i) => (
-                      <button
-                        key={s.id}
-                        type="button"
-                        onClick={() => go(i)}
-                        aria-label={`Show ${s.title}`}
-                        className={cn(
-                          "size-12 shrink-0 overflow-hidden rounded-xl ring-2 transition",
-                          i === index ? "ring-accent" : "opacity-70 ring-transparent hover:opacity-100",
-                        )}
-                      >
-                        <img src={s.image} alt="" width={96} height={96} loading="lazy" className="size-full object-cover" />
-                      </button>
-                    ))}
-                  </div>
-                  <button
-                    type="button"
-                    onClick={prev}
-                    aria-label="Previous photo"
-                    className="grid size-11 shrink-0 aspect-square place-items-center rounded-full border border-white/25 bg-white/15 text-white backdrop-blur-md transition hover:bg-white/30"
-                  >
-                    <LuChevronLeft className="rtl:rotate-180" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={next}
-                    aria-label="Next photo"
-                    className="grid size-11 shrink-0 aspect-square place-items-center rounded-full border border-white/25 bg-white/15 text-white backdrop-blur-md transition hover:bg-white/30"
-                  >
-                    <LuChevronRight className="rtl:rotate-180" />
-                  </button>
-                </div>
-              </div>
-            </div>
+    {/* Mobile-only: tiny current index indicator */}
+    <div className="mt-2.5 flex items-center justify-center gap-1.5 sm:hidden">
+      {heroSlides.map((_, i) => (
+        <button
+          key={i}
+          type="button"
+          onClick={() => go(i)}
+          aria-label={`Go to slide ${i + 1}`}
+          className={cn(
+            "size-1.5 rounded-full transition-all duration-300",
+            i === index
+              ? "w-4 bg-accent shadow-[0_0_8px_rgba(var(--accent),0.5)]"
+              : "bg-white/40 hover:bg-white/60",
+          )}
+        />
+      ))}
+    </div>
+  </div>
+</div>
           </div>
         </div>
       </Container>

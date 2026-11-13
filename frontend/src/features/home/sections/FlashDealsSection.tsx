@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   LuArrowRight,
@@ -6,17 +6,13 @@ import {
   LuChevronRight,
   LuZap,
 } from "react-icons/lu";
-import ProductCard from "../../../components/product/ProductCard";
+import ProductCard from "../../products/components/ProductCard";
 import Button from "../../../components/ui/Button";
 import Container from "../../../components/ui/Container";
-import { flashDeals } from "../../../data/home.data";
 import { cn } from "../../../lib/cn";
-import useCountdown from "../../../hooks/useCountdown";
+import useCountdown from "../hooks/useCountdown";
+import { getFlashDeals } from "../../../data/catalog.selectors";
 
-// Replace with the real end time from your API later (seconds left)
-const FLASH_SECONDS_LEFT = 5 * 3600 + 42 * 60 + 10;
-
-/** One slide: about 72% wide on phones, so the next card peeks in */
 const slideSize =
   "snap-start shrink-0 basis-[72%] min-[480px]:basis-[46%] md:basis-[31%] lg:basis-[23.5%] xl:basis-[19%]";
 
@@ -38,7 +34,19 @@ const Colon = () => (
 );
 
 const FlashDealsSection = () => {
-  const { hours, minutes, seconds } = useCountdown(FLASH_SECONDS_LEFT);
+  const deals = useMemo(() => getFlashDeals(), []);
+
+  // Derive remaining seconds from the first deal's endsAt (all share the same end in seed data)
+  const initialSeconds = useMemo(() => {
+    if (deals.length === 0) return 0;
+    return Math.max(
+      0,
+      Math.floor((new Date(deals[0].deal.endsAt).getTime() - Date.now()) / 1000),
+    );
+  }, [deals]);
+
+  const { hours, minutes, seconds } = useCountdown(initialSeconds);
+
   const scroller = useRef<HTMLUListElement>(null);
   const [edge, setEdge] = useState({ start: true, end: false });
 
@@ -65,6 +73,8 @@ const FlashDealsSection = () => {
       behavior: "smooth",
     });
   };
+
+  if (deals.length === 0) return null;
 
   const arrowClass =
     "hidden size-11 shrink-0 aspect-square place-items-center rounded-full border border-white/20 bg-white/10 text-flash-foreground transition hover:bg-white/20 disabled:pointer-events-none disabled:opacity-40 md:grid";
@@ -103,7 +113,6 @@ const FlashDealsSection = () => {
             </div>
 
             <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-              {/* Countdown */}
               <div
                 className="flex items-center gap-1.5"
                 role="timer"
@@ -112,7 +121,6 @@ const FlashDealsSection = () => {
                 <span className="me-1 hidden text-xs font-bold uppercase tracking-wider text-deal sm:inline">
                   Ends in
                 </span>
-                <span className="me-1 hidden text-xs font-bold uppercase tracking-wider text-accent sm:inline" />
 
                 <span
                   className="hidden h-8 w-px bg-white/15 lg:block"
@@ -158,7 +166,7 @@ const FlashDealsSection = () => {
             </div>
           </div>
 
-          {/* Scrolling cards: edge to edge inside the panel */}
+          {/* Scrolling cards */}
           <ul
             ref={scroller}
             onScroll={updateEdges}
@@ -193,17 +201,20 @@ const FlashDealsSection = () => {
               </Link>
             </li>
 
-            {flashDeals.map((product) => (
+            {deals.map(({ product, deal }) => (
               <li key={product.id} className={cn(slideSize, "flex")}>
                 <div className="w-full">
-                  <ProductCard product={product} showProgress />
+                  <ProductCard
+                    product={product}
+                    soldPercent={deal.soldPercent}
+                  />
                 </div>
               </li>
             ))}
           </ul>
 
-          {/* Swipe hint, phones only */}
-          <p className="relative mt-2 flex items-center justify-center gap-1 text-xs text-flash-muted md:hidden"></p>
+          {/* Swipe hint – phones only */}
+          <p className="relative mt-2 flex items-center justify-center gap-1 text-xs text-flash-muted md:hidden" />
         </div>
       </Container>
     </section>

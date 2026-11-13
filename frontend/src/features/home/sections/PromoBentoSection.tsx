@@ -88,7 +88,7 @@ const PaymentTile = () => {
         </div>
 
         <div className="flex flex-wrap gap-2">
-          {paymentOffer.methods.map((m) => (
+          {paymentOffer.methods.map((m: string) => (
             <span key={m} className="rounded-full bg-surface px-3.5 py-1.5 text-xs font-bold text-foreground">
               {m}
             </span>

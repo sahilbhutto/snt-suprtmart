@@ -1,4 +1,5 @@
 export const FREE_DELIVERY_THRESHOLD = 2000;
+
 export const DELIVERY_FEE = 100;
 
 export const COUPONS: Record<string, { label: string; amount: number; minSubtotal: number }> = {
