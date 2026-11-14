@@ -99,11 +99,11 @@ const CategoryContent = ({ category }: { category: CategoryItem }) => {
   );
 };
 
-const CategoryPage = () => {
+const CategoryDetailsPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const category = categoryItems.find((c) => c.slug === slug);
 
   return category ? <CategoryContent key={category.slug} category={category} /> : <CategoryNotFound />;
 };
 
-export default CategoryPage;
+export default CategoryDetailsPage;

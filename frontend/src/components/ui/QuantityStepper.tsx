@@ -2,14 +2,17 @@ import { LuMinus, LuPlus } from 'react-icons/lu';
 
 interface QuantityStepperProps {
   value: number;
-  label: string; // product name, for screen readers
+  label: string; 
   onIncrease: () => void;
   onDecrease: () => void;
+  min?: number;
+  max?: number;
 }
 
-const QuantityStepper = ({ value, label, onIncrease, onDecrease }: QuantityStepperProps) => (
+const QuantityStepper = ({ value, label, onIncrease, onDecrease, min, max }: QuantityStepperProps) => (
   <div className="flex items-center gap-1 rounded-full border border-border bg-surface-muted p-0.5">
     <button
+      disabled={min !== undefined && value <= min}
       type="button"
       onClick={onDecrease}
       aria-label={`Decrease ${label}`}
@@ -19,6 +22,7 @@ const QuantityStepper = ({ value, label, onIncrease, onDecrease }: QuantityStepp
     </button>
     <b className="w-6 text-center text-sm tabular-nums" aria-live="polite">{value}</b>
     <button
+      disabled={max !== undefined && value >= max}
       type="button"
       onClick={onIncrease}
       aria-label={`Increase ${label}`}
@@ -26,6 +30,8 @@ const QuantityStepper = ({ value, label, onIncrease, onDecrease }: QuantityStepp
     >
       <LuPlus size={14} />
     </button>
+
+
   </div>
 );
 

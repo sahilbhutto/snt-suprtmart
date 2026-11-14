@@ -9,7 +9,7 @@ import Pagination from "../../components/ui/Pagination";
 import { cn } from "../../lib/cn";
 import RequestBand from "../../features/categories/components/RequestBand";
 
-const AllCategoriesPage = () => {
+const CategoriesPage = () => {
   const f = useCategoryFilters();
   const gridRef = useRef<HTMLDivElement>(null);
   const isFirstRender = useRef(true);
@@ -74,4 +74,4 @@ const AllCategoriesPage = () => {
   );
 };
 
-export default AllCategoriesPage;
+export default CategoriesPage;

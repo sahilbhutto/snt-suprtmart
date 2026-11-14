@@ -1,15 +1,19 @@
 import type { Tint } from "../types/catalog";
 
-/** Safe number formatter – never throws on undefined/null/NaN */
 export const formatPrice = (value: number | null | undefined): string => {
   if (value == null || Number.isNaN(value)) return "Rs. —";
   return `Rs. ${value.toLocaleString("en-PK")}`;
 };
 
-/** Safe count formatter – never throws on undefined/null/NaN */
 export const formatCount = (value: number | null | undefined): string => {
   if (value == null || Number.isNaN(value)) return "0";
   return value.toLocaleString("en-PK");
+};
+
+export const formatDate = (iso: string) => {
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return "";
+  return new Intl.DateTimeFormat("en-PK", { day: "numeric", month: "short", year: "numeric" }).format(date);
 };
 
 export const tintBg: Record<Tint, string> = {
