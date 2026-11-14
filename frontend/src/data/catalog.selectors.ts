@@ -6,6 +6,9 @@ import { brands } from "./brands.data";
 import { categories, collections } from "./category.data";
 import { flashDeals } from "./flashDeals.data";
 import { products } from "./products.data";
+import { reviews } from "./reviews.data";
+import { buildSampleSummary } from "../lib/reviews";
+import type { ProductReview, ReviewSummary } from "../types/review.types";
 
 
 const categoriesById = new Map(categories.map((c) => [c.id, c]));
@@ -33,6 +36,7 @@ export const categoryItems: CategoryListItem[] = categories
   .filter((c) => c.isActive)
   .sort((a, b) => a.sortOrder - b.sortOrder)
   .map((c) => ({ ...c, ...statsFor(c.id) }));
+
 
 /* ---------- Home page ---------- */
 
@@ -79,3 +83,28 @@ export const getTrendingProducts = (tab: TrendingTab, limit = 10): ProductListIt
       return bySold.slice(0, limit);
   }
 };
+
+
+/* ---------- Product Details page ---------- */
+
+const bySold = (a: ProductListItem, b: ProductListItem) => b.sold - a.sold;
+
+export const getProductBySlug = (slug: string): ProductListItem | undefined =>
+  productItems.find((p) => p.slug === slug);
+
+export const getCategoryProducts = (product: ProductListItem, limit = 10): ProductListItem[] =>
+  productItems.filter((p) => p.id !== product.id && p.categoryId === product.categoryId).sort(bySold).slice(0, limit);
+
+export const getBrandProducts = (product: ProductListItem, limit = 10): ProductListItem[] =>
+  productItems.filter((p) => p.id !== product.id && p.brandId === product.brandId).sort(bySold).slice(0, limit);
+
+export const getBestSellers = (excludeId: string, limit = 10): ProductListItem[] =>
+  productItems.filter((p) => p.id !== excludeId).sort(bySold).slice(0, limit);
+
+export const getProductReviews = (productId: string): ProductReview[] =>
+  reviews
+    .filter((r) => r.productId === productId)
+    .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
+
+export const getReviewSummary = (product: ProductListItem): ReviewSummary =>
+  buildSampleSummary(product.rating, product.ratingCount);
