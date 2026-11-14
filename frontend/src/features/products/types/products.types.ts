@@ -1,51 +1,24 @@
 import type { PaginatedResponse } from "../../../types/api.types";
 
-
 export interface CategorySummary {
   id: string;
   slug: string;
   name: string;
 }
 
-export interface BrandSummary {
-  id: string;
-  slug: string;
-  name: string;
-}
-
-export interface ProductImage {
-  url: string;
-  alt: string;
-  width?: number;
-  height?: number;
-}
-
 export type ProductId = string;
-
-export type BrandSlug = string;
-
 
 export interface ProductSeo {
   title?: string;
   description?: string;
 }
 
-
-export interface Brand {
-  id: string;
-  slug: BrandSlug;
-  name: string;
-  logo?: ProductImage;
-}
-
-
 export interface Product {
   id: ProductId;
   slug: string;
   name: string;
   description?: string;
- categoryId: string;
-  brandId: string;
+  categoryId: string;
   image: string;
   price: number;
   oldPrice?: number;
@@ -73,10 +46,16 @@ export interface ProductDerived {
 
 export interface ProductListItem extends Product, ProductDerived {
   category: CategorySummary;
-  brand: BrandSummary;
 }
 
-export const PRODUCT_SORTS = ["popular", "newest", "price-asc", "price-desc", "rating", "discount"] as const;
+export const PRODUCT_SORTS = [
+  "popular",
+  "newest",
+  "price-asc",
+  "price-desc",
+  "rating",
+  "discount",
+] as const;
 
 export type ProductSort = (typeof PRODUCT_SORTS)[number];
 
@@ -87,7 +66,6 @@ export const PRODUCT_PAGE_SIZE = 12;
 export interface ProductListQuery {
   q?: string;
   categorySlug?: string;
-  brandSlugs?: BrandSlug[];
   minPrice?: number;
   maxPrice?: number;
   minRating?: number;
@@ -99,7 +77,6 @@ export interface ProductListQuery {
 }
 
 export interface ProductFacets {
-  brands: { slug: BrandSlug; name: string; count: number }[];
   priceRange: { min: number; max: number } | null;
 }
 
@@ -113,8 +90,7 @@ export interface FlashDeal {
   endsAt: string;
 }
 
-
 export interface ProductCardProps {
   product: ProductListItem;
-  soldPercent?: number; // only flash deals pass this
+  soldPercent?: number; 
 }

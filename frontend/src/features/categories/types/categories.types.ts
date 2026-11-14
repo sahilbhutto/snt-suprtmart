@@ -1,4 +1,3 @@
-import type { IconType } from "react-icons";
 import type { PaginatedResponse } from "../../../types/api.types";
 
 

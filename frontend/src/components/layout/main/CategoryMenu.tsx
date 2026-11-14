@@ -5,9 +5,8 @@ import Button from "../../ui/Button";
 import ProductImage from "../../../features/products/components/ProductImage";
 import CategoryImage from "../../../features/categories/components/CategoryImage";
 import { categoryItems, productItems } from "../../../data/catalog.selectors";
-import { getCollectionStyle } from "../../../features/catalog/category.ui";
 import { cn } from "../../../lib/cn";
-import { formatCount, formatPrice, tintBg } from "../../../lib/format";
+import { formatCount, formatPrice } from "../../../lib/format";
 import useClickOutside from "../../../hooks/useClickOutside";
 
 

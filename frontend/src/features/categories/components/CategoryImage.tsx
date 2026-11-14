@@ -12,7 +12,6 @@ const CategoryImage = ({
   className?: string;
 }) => {
   const style = getCollectionStyle(category.collectionSlug);
-  const Icon = category.icon ?? style.icon;
   const tint = style.tint;
 
   // support both string URL and { url, alt }
@@ -34,7 +33,7 @@ const CategoryImage = ({
         alt={category.name}
         width={300}
         height={300}
-        fallback={<Icon className="size-1/3 text-foreground/70" aria-hidden />}
+        fallback={className="size-1/3 text-foreground/70"}
       />
     </div>
   );

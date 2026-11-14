@@ -1,8 +1,7 @@
 import { LuArrowDownUp, LuLayoutGrid, LuSlidersHorizontal, LuTag, LuPackageCheck } from "react-icons/lu";
-import type { ProductFiltersState } from "../hooks/useProductFilters";
+import { productSortOptions, type ProductFiltersState } from "../hooks/useProductFilters";
 import type { SelectOption } from "../../../components/ui/Select";
 import type { ProductSort } from "../types/products.types";
-import { productSortOptions } from "../../categories/hooks/useCategoryProducts";
 import { formatCount, formatPrice } from "../../../lib/format";
 import { categoryItems } from "../../../data/catalog.selectors";
 import { getCollectionStyle } from "../../catalog/category.ui";
@@ -98,10 +97,6 @@ const ProductToolbar = ({ f, onOpenFilters, showCategory = true }: ProductToolba
 
         {f.q.trim() && <FilterChip label={`Search: ${f.q.trim()}`} onRemove={() => f.setQuery("")} />}
         {showCategory && f.category && categoryLabel && <FilterChip label={categoryLabel} onRemove={() => f.setCategory("")} />}
-        {f.brands.map((slug) => {
-          const name = f.brandFacets.find((b) => b.slug === slug)?.name ?? slug;
-          return <FilterChip key={slug} label={name} onRemove={() => f.toggleBrand(slug)} />;
-        })}
         {priceLabel && <FilterChip label={priceLabel} onRemove={() => f.setPrice(null, null)} />}
         {f.rating > 0 && <FilterChip label={`${f.rating} stars and up`} onRemove={() => f.setRating(0)} />}
         {f.sale && <FilterChip label="On sale" onRemove={f.toggleSale} />}

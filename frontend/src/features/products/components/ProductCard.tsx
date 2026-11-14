@@ -57,7 +57,6 @@ const ProductCard = ({ product, soldPercent }: ProductCardProps) => {
       </div>
 
       <div className="flex flex-1 flex-col gap-1.5">
-        <p className="text-xs text-muted-foreground">{product.brand.name}</p>
         <Link
           to={`/product/${product.slug}`}
           className="line-clamp-2 text-sm font-semibold leading-snug hover:text-primary"

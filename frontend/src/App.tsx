@@ -6,6 +6,7 @@ import CategoriesPage from "./pages/public/CategoriesPage"
 import CategoryDetailsPage from "./pages/public/CategoryDetailsPage"
 import ProductsPage from "./pages/public/ProductsPage"
 import ProductDetailPage from "./pages/public/ProductDetailPage"
+import CartPage from "./pages/public/CartPage"
 
 const App = () => (
   <Routes>
@@ -16,6 +17,8 @@ const App = () => (
       <Route path="category/:slug" element={<CategoryDetailsPage />} />
       <Route path="products" element={<ProductsPage />} />
       <Route path="product/:slug" element={<ProductDetailPage />} />
+      <Route path="cart" element={<CartPage />} />
+
       <Route path="*" element={<NotFoundPage />} />
     </Route>
 

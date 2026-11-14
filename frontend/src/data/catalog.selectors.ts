@@ -2,7 +2,6 @@ import type { AisleGroup, NavItem, TrendingTab } from "../types/catalog";
 import type { CategoryListItem } from "../features/categories/types/categories.types";
 import type { FlashDeal, ProductListItem } from "../features/products/types/products.types";
 import { toListItem } from "../features/products/lib/product";
-import { brands } from "./brands.data";
 import { categories, collections } from "./category.data";
 import { flashDeals } from "./flashDeals.data";
 import { products } from "./products.data";
@@ -13,14 +12,12 @@ import type { ProductReview, ReviewSummary } from "../types/review.types";
 
 const categoriesById = new Map(categories.map((c) => [c.id, c]));
 
-const brandsById = new Map(brands.map((b) => [b.id, b]));
 
 export const productItems: ProductListItem[] = products
   .filter((p) => p.isActive)
-  .map((p) => toListItem(p, categoriesById, brandsById));
+  .map((p) => toListItem(p, categoriesById));
 
 const productsById = new Map(productItems.map((p) => [p.id, p]));
-
 
 const statsFor = (categoryId: string) => {
   const list = productItems.filter((p) => p.categoryId === categoryId);
@@ -65,11 +62,6 @@ export const getFlashDeals = (): { product: ProductListItem; deal: FlashDeal }[]
     return product && product.inStock ? [{ product, deal }] : [];
   });
 
-export const getBrandsWithCounts = () =>
-  brands
-    .map((b) => ({ ...b, productCount: productItems.filter((p) => p.brandId === b.id).length }))
-    .filter((b) => b.productCount > 0);
-
 export const getTrendingProducts = (tab: TrendingTab, limit = 10): ProductListItem[] => {
   const bySold = [...productItems].sort((a, b) => b.sold - a.sold);
   switch (tab) {
@@ -84,7 +76,6 @@ export const getTrendingProducts = (tab: TrendingTab, limit = 10): ProductListIt
   }
 };
 
-
 /* ---------- Product Details page ---------- */
 
 const bySold = (a: ProductListItem, b: ProductListItem) => b.sold - a.sold;
@@ -94,9 +85,6 @@ export const getProductBySlug = (slug: string): ProductListItem | undefined =>
 
 export const getCategoryProducts = (product: ProductListItem, limit = 10): ProductListItem[] =>
   productItems.filter((p) => p.id !== product.id && p.categoryId === product.categoryId).sort(bySold).slice(0, limit);
-
-export const getBrandProducts = (product: ProductListItem, limit = 10): ProductListItem[] =>
-  productItems.filter((p) => p.id !== product.id && p.brandId === product.brandId).sort(bySold).slice(0, limit);
 
 export const getBestSellers = (excludeId: string, limit = 10): ProductListItem[] =>
   productItems.filter((p) => p.id !== excludeId).sort(bySold).slice(0, limit);

@@ -30,7 +30,7 @@ const ProductNotFound = () => (
 
 
 const ProductDetailContent = ({ data }: { data: ProductDetailData }) => {
-  const { product, categoryProducts, brandProducts, bestSellers, reviews, summary } = data;
+  const { product, categoryProducts, bestSellers, reviews, summary } = data;
 
   const [tab, setTab] = useState<ProductTabKey>("description");
   const [showBar, setShowBar] = useState(false);
@@ -88,13 +88,6 @@ const ProductDetailContent = ({ data }: { data: ProductDetailData }) => {
         ) : (
           <ProductShelf title="Best sellers" products={bestSellers} actionLabel="See all" actionTo="/products" />
         )}
-
-        <ProductShelf
-          title={`More from ${product.brand.name}`}
-          products={brandProducts}
-          actionLabel="See all"
-          actionTo={`/products?brand=${product.brand.slug}`}
-        />
       </Container>
 
       <ProductStickyBar product={product} visible={showBar} />
@@ -106,7 +99,6 @@ const ProductDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const data = useProduct(slug);
 
-  // key resets the quantity, tabs and gallery when you move to another product
   return data ? <ProductDetailContent key={data.product.id} data={data} /> : <ProductNotFound />;
 };
 

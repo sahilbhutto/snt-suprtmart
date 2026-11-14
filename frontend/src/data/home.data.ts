@@ -1,6 +1,5 @@
 import type {
   HeroSlide,
-  Testimonial,
   TrendingTab,
   TrustItem,
 } from "../types/catalog";

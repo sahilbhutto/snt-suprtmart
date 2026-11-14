@@ -5,10 +5,8 @@ import {
   LuArrowRight,
   LuChevronLeft,
   LuChevronRight,
-  LuMapPin,
   LuSearch,
   LuStar,
-  LuTruck,
 } from "react-icons/lu";
 import Badge from "../../../components/ui/Badge";
 import Button from "../../../components/ui/Button";
@@ -41,7 +39,6 @@ const HeroSection = () => {
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
   const total = heroSlides.length;
-  const slide = heroSlides[index];
 
   const go = (i: number) => setIndex((i + total) % total);
   const next = () => go(index + 1);
@@ -52,7 +49,6 @@ const HeroSection = () => {
     navigate(`/products?q=${encodeURIComponent(query.trim())}`);
   };
 
-  /* Cards drift slightly with the mouse (desktop only, no re-render) */
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
     const r = e.currentTarget.getBoundingClientRect();
     e.currentTarget.style.setProperty("--px", String((e.clientX - r.left) / r.width - 0.5));
@@ -77,11 +73,6 @@ const HeroSection = () => {
     if (e.key === "ArrowRight") next();
     if (e.key === "ArrowLeft") prev();
   };
-
-  const drift = (strength: number) => ({
-    transform: `translate3d(calc(var(--px, 0) * ${strength}px), calc(var(--py, 0) * ${strength}px), 0)`,
-    transition: "transform 250ms ease-out",
-  });
 
   return (
     <section aria-label="Welcome to SNT Supermart">

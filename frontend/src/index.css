@@ -19,13 +19,13 @@
   --surface: #ffffff;
   --surface-muted: #eef1ed;
   --border: #e6ebe7;
-
   --border-strong: #cfd8d1;
+
   /* Text */
   --muted-foreground: #55655b;
   --subtle-foreground: #8a998f;
 
-  /* Brand */
+    /* Brand */
   --primary: #15803d;
   --primary-foreground: #ffffff;
   --primary-soft: #f0fdf4;

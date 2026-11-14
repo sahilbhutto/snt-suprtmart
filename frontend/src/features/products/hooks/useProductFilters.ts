@@ -1,7 +1,6 @@
 import { useCallback, useDeferredValue, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
-import type { ProductSort } from "../../categories/hooks/useCategoryProducts";
-import { DEFAULT_PRODUCT_SORT, PRODUCT_PAGE_SIZE, PRODUCT_SORTS, type ProductListItem } from "../types/products.types";
+import { DEFAULT_PRODUCT_SORT, PRODUCT_PAGE_SIZE, PRODUCT_SORTS, type ProductListItem, type ProductSort } from "../types/products.types";
 import { productItems } from "../../../data/catalog.selectors";
 
 export const productSortOptions: { value: ProductSort; label: string }[] = [
@@ -35,7 +34,6 @@ const toNumber = (v: string | null) => {
 interface Criteria {
   q: string;
   category: string;
-  brands: string[];
   min: number | null;
   max: number | null;
   rating: number;
@@ -43,14 +41,12 @@ interface Criteria {
   sale: boolean;
 }
 
-/** skip lets us count a facet while ignoring its own filter */
-const matches = (p: ProductListItem, c: Criteria, skip?: "category" | "brand") => {
+const matches = (p: ProductListItem, c: Criteria, skip?: "category") => {
   if (c.q) {
-    const haystack = `${p.name} ${p.brand.name} ${p.category.name}`.toLowerCase();
+    const haystack = `${p.name} ${p.category.name}`.toLowerCase();
     if (!c.q.split(/\s+/).every((word) => haystack.includes(word))) return false;
   }
   if (skip !== "category" && c.category && p.category.slug !== c.category) return false;
-  if (skip !== "brand" && c.brands.length > 0 && !c.brands.includes(p.brand.slug)) return false;
   if (c.min !== null && p.price < c.min) return false;
   if (c.max !== null && p.price > c.max) return false;
   if (c.rating > 0 && p.rating < c.rating) return false;
@@ -60,7 +56,6 @@ const matches = (p: ProductListItem, c: Criteria, skip?: "category" | "brand") =
 };
 
 interface Options {
-  /** Fixes the category (used by the single category page) */
   categorySlug?: string;
 }
 
@@ -69,8 +64,6 @@ export const useProductFilters = ({ categorySlug }: Options = {}) => {
 
   const q = params.get("q") ?? "";
   const category = categorySlug ?? params.get("category") ?? "";
-  const brandsKey = params.getAll("brand").join("|");
-  const brandList = useMemo(() => (brandsKey ? brandsKey.split("|") : []), [brandsKey]);
   const min = toNumber(params.get("min"));
   const max = toNumber(params.get("max"));
   const rating = toNumber(params.get("rating")) ?? 0;
@@ -109,8 +102,8 @@ export const useProductFilters = ({ categorySlug }: Options = {}) => {
   );
 
   const criteria = useMemo<Criteria>(
-    () => ({ q: deferredQ.trim().toLowerCase(), category, brands: brandList, min, max, rating, stock, sale }),
-    [deferredQ, category, brandList, min, max, rating, stock, sale],
+    () => ({ q: deferredQ.trim().toLowerCase(), category, min, max, rating, stock, sale }),
+    [deferredQ, category, min, max, rating, stock, sale],
   );
 
   /* Results */
@@ -135,18 +128,6 @@ export const useProductFilters = ({ categorySlug }: Options = {}) => {
     return counts;
   }, [pool, criteria]);
 
-  const brandFacets = useMemo(() => {
-    const map = new Map<string, { slug: string; name: string; count: number }>();
-    for (const p of pool) {
-      const entry = map.get(p.brand.slug) ?? { slug: p.brand.slug, name: p.brand.name, count: 0 };
-      if (matches(p, criteria, "brand")) entry.count += 1;
-      map.set(p.brand.slug, entry);
-    }
-    return [...map.values()]
-      .filter((b) => b.count > 0 || brandList.includes(b.slug))
-      .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
-  }, [pool, criteria, brandList]);
-
   const bounds = useMemo(() => {
     if (pool.length === 0) return { min: 0, max: 0 };
     const prices = pool.map((p) => p.price);
@@ -156,7 +137,6 @@ export const useProductFilters = ({ categorySlug }: Options = {}) => {
   const activeCount =
     Number(!!q.trim()) +
     Number(!!category && !categorySlug) +
-    brandList.length +
     Number(min !== null || max !== null) +
     Number(rating > 0) +
     Number(stock) +
@@ -172,7 +152,6 @@ export const useProductFilters = ({ categorySlug }: Options = {}) => {
 
     q,
     category,
-    brands: brandList,
     min,
     max,
     rating,
@@ -181,21 +160,12 @@ export const useProductFilters = ({ categorySlug }: Options = {}) => {
     sort,
 
     categoryFacets,
-    brandFacets,
     bounds,
     activeCount,
     hasFilters: activeCount > 0,
 
     setQuery: (v: string) => update((next) => setOrDelete(next, "q", v)),
     setCategory: (slug: string) => update((next) => setOrDelete(next, "category", slug)),
-    toggleBrand: (slug: string) =>
-      update((next) => {
-        const set = new Set(next.getAll("brand"));
-        if (set.has(slug)) set.delete(slug);
-        else set.add(slug);
-        next.delete("brand");
-        set.forEach((b) => next.append("brand", b));
-      }),
     setPrice: (lo: number | null, hi: number | null) =>
       update((next) => {
         setOrDelete(next, "min", lo === null ? null : String(lo));
