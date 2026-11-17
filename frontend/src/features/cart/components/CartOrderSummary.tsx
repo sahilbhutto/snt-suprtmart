@@ -4,7 +4,8 @@ import { useCartStore } from "../store/cartStore";
 import CartCoupon from "./CartCoupon";
 import { formatPrice } from "../../../lib/format";
 import Button from "../../../components/ui/Button";
-import { paymentMethods } from "../../home/data/layout.data";
+import { paymentMethods } from "../../../data/layout.data";
+import { useIsAuthenticated } from "../../auth/store/authStore";
 
 interface CartOrderSummaryProps {
   summary: CartSummary;
@@ -22,6 +23,7 @@ const Row = ({ label, value, tone }: { label: string; value: string; tone?: "suc
 
 const CartOrderSummary = ({ summary, itemCount, canCheckout, blockedMessage }: CartOrderSummaryProps) => {
   const coupon = useCartStore((s) => s.coupon);
+  const isAuthed = useIsAuthenticated();
 
   return (
     <aside aria-label="Order summary" className="grid gap-5 rounded-3xl border border-border bg-surface p-5 shadow-card sm:p-6 lg:sticky lg:top-24">
@@ -48,7 +50,7 @@ const CartOrderSummary = ({ summary, itemCount, canCheckout, blockedMessage }: C
 
       {canCheckout ? (
         <Button to="/checkout" size="lg" className="w-full">
-          Proceed to checkout · {formatPrice(summary.total)}
+          {isAuthed ? `Proceed to checkout · ${formatPrice(summary.total)}` : "Sign in to checkout"}
         </Button>
       ) : (
         <div className="grid gap-2">

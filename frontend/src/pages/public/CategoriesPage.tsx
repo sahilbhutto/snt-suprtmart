@@ -7,7 +7,6 @@ import CategoriesEmpty from "../../features/categories/components/CategoriesEmpt
 import CategoryCard from "../../features/categories/components/CategoryCard";
 import Pagination from "../../components/ui/Pagination";
 import { cn } from "../../lib/cn";
-import RequestBand from "../../features/categories/components/RequestBand";
 
 const CategoriesPage = () => {
   const f = useCategoryFilters();
@@ -29,7 +28,7 @@ const CategoriesPage = () => {
   return (
         <>
       <Container className="grid gap-6 pt-4 sm:gap-8 sm:pt-6">
-        <CategoriesHero q={f.q} onQueryChange={f.setQuery} />
+        <CategoriesHero />
 
         <div ref={gridRef} className="grid scroll-mt-28 gap-5">
           <CategoryToolbar
@@ -67,8 +66,6 @@ const CategoriesPage = () => {
 
           <Pagination page={f.page} totalPages={f.totalPages} onChange={f.setPage} className="pt-2" />
         </div>
-
-        <RequestBand />
       </Container>
     </>
   );

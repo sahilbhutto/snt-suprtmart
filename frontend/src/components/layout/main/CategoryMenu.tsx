@@ -45,7 +45,7 @@ const CategoryMenu = () => {
       {open && (
         <div id="category-menu" className="absolute left-0 top-full z-50 mt-3 grid w-[min(980px,calc(100vw-2rem))] grid-cols-[280px_1fr] overflow-hidden rounded-3xl border border-border bg-surface shadow-pop">
           {/* Left: category list */}
-        <div className="max-h-[430px] overflow-y-auto border-r border-border p-3">
+        <div className="max-h-107.5 overflow-y-auto border-r border-border p-3">
   <p className="px-3 pb-2 pt-1 text-[11px] font-extrabold uppercase tracking-[0.08em] text-muted-foreground">
     Categories
   </p>

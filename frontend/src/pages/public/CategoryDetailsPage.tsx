@@ -4,7 +4,6 @@ import { LuArrowRight, LuSearchX } from "react-icons/lu";
 import Container from "../../components/ui/Container";
 import Button from "../../components/ui/Button";
 import { useProductFilters } from "../../features/products/hooks/useProductFilters";
-import type { CategoryListItem } from "../../types/catalog";
 import { categoryItems, productItems } from "../../data/catalog.selectors";
 import CategoryHero from "../../features/categories/components/CategoryHero";
 import CategoryRail from "../../features/categories/components/CategoryRail";
@@ -14,6 +13,7 @@ import ProductToolbar from "../../features/products/components/ProductToolbar";
 import Pagination from "../../components/ui/Pagination";
 import CategoryCard from "../../features/categories/components/CategoryCard";
 import ProductFilters from "../../features/products/components/ProductFilters";
+import type { CategoryListItem } from "../../features/categories/types/categories.types";
 
 const CategoryNotFound = () => (
   <Container className="grid place-items-center py-24 text-center">

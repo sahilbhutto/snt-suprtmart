@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
-import { footerColumns, paymentMethods } from "../../../features/home/data/layout.data";
+import { footerColumns } from "../../../features/home/data/layout.data";
 import Container from "../../ui/Container";
 import Button from "../../ui/Button";
+import { paymentMethods } from "../../../data/layout.data";
 
 const Footer = () => (
 

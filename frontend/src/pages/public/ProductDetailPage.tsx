@@ -58,10 +58,10 @@ const ProductDetailContent = ({ data }: { data: ProductDetailData }) => {
     <div className="pb-28 lg:pb-12">
       <Container className="grid gap-8 pt-4 sm:gap-10 sm:pt-6">
         {/* Breadcrumb */}
-        <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+        <nav aria-label="Breadcrumb" className="hidden md:flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
           <Link to="/" className="transition hover:text-foreground">Home</Link>
           <span aria-hidden>/</span>
-          <Link to="/products" className="transition hover:text-foreground">All products</Link>
+          <Link to="/products" className="transition hover:text-foreground">Products</Link>
           <span aria-hidden>/</span>
           <Link to={`/category/${product.category.slug}`} className="transition hover:text-foreground">{product.category.name}</Link>
           <span aria-hidden>/</span>
