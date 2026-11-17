@@ -1,10 +1,10 @@
 import { useState } from "react";
 import type { FormEvent, ReactNode } from "react";
-import { LuChevronDown, LuSearch } from "react-icons/lu";
-import { formatCount, formatPrice } from "../../../lib/format";
-import type { ProductFiltersState } from "../hooks/useProductFilters";
+import { LuChevronDown } from "react-icons/lu";
 import { categoryItems } from "../../../data/catalog.selectors";
 import { cn } from "../../../lib/cn";
+import { formatCount, formatPrice } from "../../../lib/format";
+import type { ProductFiltersState } from "../hooks/useProductFilters";
 
 const FilterSection = ({ title, children }: { title: string; children: ReactNode }) => (
   <details open className="group border-b border-border py-4 last:border-b-0">
@@ -55,8 +55,6 @@ interface ProductFiltersProps {
 }
 
 const ProductFilters = ({ f, showCategory = true }: ProductFiltersProps) => {
-  const [brandQuery, setBrandQuery] = useState("");
-  const [showAllBrands, setShowAllBrands] = useState(false);
   const [showAllCategories, setShowAllCategories] = useState(false);
   const [lo, setLo] = useState(f.min?.toString() ?? "");
   const [hi, setHi] = useState(f.max?.toString() ?? "");
@@ -66,9 +64,6 @@ const ProductFilters = ({ f, showCategory = true }: ProductFiltersProps) => {
     .filter((c) => c.count > 0 || c.slug === f.category)
     .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
   const visibleCategories = showAllCategories ? categories : categories.slice(0, 6);
-
-  const matchingBrands = f.brandFacets.filter((b) => b.name.toLowerCase().includes(brandQuery.trim().toLowerCase()));
-  const visibleBrands = showAllBrands || brandQuery ? matchingBrands : matchingBrands.slice(0, 6);
 
   const applyPrice = (e: FormEvent) => {
     e.preventDefault();
@@ -104,30 +99,6 @@ const ProductFilters = ({ f, showCategory = true }: ProductFiltersProps) => {
           )}
         </FilterSection>
       )}
-
-      <FilterSection title="Brand">
-        <div className="relative">
-          <LuSearch size={16} className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-          <input
-            value={brandQuery}
-            onChange={(e) => setBrandQuery(e.target.value)}
-            aria-label="Search brands"
-            placeholder="Search brands"
-            className="h-10 w-full rounded-xl border border-border bg-background pe-3 ps-9 text-sm outline-none transition focus:border-primary"
-          />
-        </div>
-        <div className="grid gap-0.5">
-          {visibleBrands.map((b) => (
-            <OptionRow key={b.slug} type="checkbox" label={b.name} count={b.count} checked={f.brands.includes(b.slug)} onChange={() => f.toggleBrand(b.slug)} />
-          ))}
-          {visibleBrands.length === 0 && <p className="px-1 py-2 text-sm text-muted-foreground">No brands found</p>}
-        </div>
-        {!brandQuery && matchingBrands.length > 6 && (
-          <button type="button" onClick={() => setShowAllBrands((v) => !v)} className="w-max text-xs font-bold text-link hover:underline">
-            {showAllBrands ? "Show less" : `Show all ${matchingBrands.length}`}
-          </button>
-        )}
-      </FilterSection>
 
       <FilterSection title="Price (Rs.)">
         <form onSubmit={applyPrice} className="grid gap-3">

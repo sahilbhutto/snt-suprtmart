@@ -33,7 +33,6 @@ export const useProductSeo = (product?: ProductListItem) => {
       name: product.name,
       description,
       sku: product.sku,
-      brand: { "@type": "Brand", name: product.brand.name },
       image: image ? new URL(image, window.location.origin).href : undefined,
       offers: {
         "@type": "Offer",

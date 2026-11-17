@@ -1,23 +1,17 @@
 import { useState } from "react";
 import type { FormEvent, KeyboardEvent, MouseEvent, TouchEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   LuArrowRight,
   LuChevronLeft,
   LuChevronRight,
-  LuMapPin,
-  LuSearch,
   LuStar,
-  LuTruck,
 } from "react-icons/lu";
 import Badge from "../../../components/ui/Badge";
 import Button from "../../../components/ui/Button";
 import Container from "../../../components/ui/Container";
 import { cn } from "../../../lib/cn";
 import { heroSlides } from "../../../data/home.data";
-
-
-const popularSearches = ["Basmati rice", "Fresh milk", "Cooking oil", "Eggs", "Tea"];
 
 const stats = [
   { value: "70,000+", label: "products" },
@@ -33,26 +27,17 @@ const prefersReducedMotion = () =>
 
 
 const HeroSection = () => {
-  const navigate = useNavigate();
-  const [query, setQuery] = useState("");
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [reduced] = useState(prefersReducedMotion);
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
   const total = heroSlides.length;
-  const slide = heroSlides[index];
 
   const go = (i: number) => setIndex((i + total) % total);
   const next = () => go(index + 1);
   const prev = () => go(index - 1);
 
-  const handleSearch = (e: FormEvent) => {
-    e.preventDefault();
-    navigate(`/products?q=${encodeURIComponent(query.trim())}`);
-  };
-
-  /* Cards drift slightly with the mouse (desktop only, no re-render) */
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
     const r = e.currentTarget.getBoundingClientRect();
     e.currentTarget.style.setProperty("--px", String((e.clientX - r.left) / r.width - 0.5));
@@ -78,11 +63,6 @@ const HeroSection = () => {
     if (e.key === "ArrowLeft") prev();
   };
 
-  const drift = (strength: number) => ({
-    transform: `translate3d(calc(var(--px, 0) * ${strength}px), calc(var(--py, 0) * ${strength}px), 0)`,
-    transition: "transform 250ms ease-out",
-  });
-
   return (
     <section aria-label="Welcome to SNT Supermart">
       <Container className="pt-4 sm:pt-6">
@@ -91,6 +71,7 @@ const HeroSection = () => {
           <div aria-hidden className="pointer-events-none absolute -bottom-32 left-1/3 size-96 rounded-full bg-primary/20 blur-3xl" />
 
           <div className="relative grid gap-8 p-4 sm:p-8 lg:grid-cols-[1.05fr_1fr] lg:gap-10 lg:p-12">
+            
             {/* ================= LEFT: message ================= */}
             <div className="flex flex-col justify-center gap-6">
               <Badge tone="glass" className="w-max gap-2 py-1.5 text-xs">
@@ -114,35 +95,6 @@ const HeroSection = () => {
               <p className="max-w-lg text-base text-ink-muted sm:text-lg">
                 Shop 70,000+ products from your own town&apos;s supermarket. Pay cash on delivery or online with Easypaisa and JazzCash.
               </p>
-
-              {/* Search */}
-              <form onSubmit={handleSearch} role="search" className="flex w-[84%] sm:w-full max-w-xl items-center gap-1 rounded-full bg-white p-1.5 shadow-pop">
-                <LuSearch className="ms-3 shrink-0 text-neutral-500" />
-                <input
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  aria-label="Search products"
-                  placeholder="Search rice, milk, oil, eggs..."
-                  className="h-11 min-w-0 flex-1 bg-transparent px-2 text-sm text-neutral-900 outline-none placeholder:text-neutral-500"
-                />
-                <Button type="submit" variant="ink" aria-label="Search">
-                  <span className="hidden sm:inline">Search</span>
-                  <LuArrowRight className="sm:hidden" />
-                </Button>
-              </form>
-
-              <div className="-mt-2 flex items-center gap-2 overflow-x-auto text-xs [scrollbar-width:none]">
-                <span className="shrink-0 text-ink-muted">Popular:</span>
-                {popularSearches.map((term) => (
-                  <Link
-                    key={term}
-                    to={`/products?q=${encodeURIComponent(term)}`}
-                    className="shrink-0 rounded-full border border-ink-border px-3 py-1.5 transition hover:bg-white/10"
-                  >
-                    {term}
-                  </Link>
-                ))}
-              </div>
 
               {/* CTAs */}
               <div className="flex flex-wrap gap-1 sm:gap-3">
@@ -247,7 +199,7 @@ const HeroSection = () => {
       >
         <span
           className={cn(
-            "absolute inset-x-0 top-1/2 h-[3px] -translate-y-1/2 overflow-hidden rounded-full transition-all duration-300",
+            "absolute inset-x-0 top-1/2 h-0.75 -translate-y-1/2 overflow-hidden rounded-full transition-all duration-300",
             i === index
               ? "bg-accent/30 shadow-[0_0_12px_rgba(var(--accent),0.45)]"
               : "bg-white/25 group-hover:bg-white/40",

@@ -2,10 +2,10 @@
 import { useCallback, useDeferredValue, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import type { CategoryItem } from "../../../types/catalog";
 import { categoryItems as allCategoryItems } from "../../../data/catalog.selectors";
+import type { CategoryItem } from "../types/categories.types";
 
-export const PAGE_SIZE = 8;
+export const PAGE_SIZE = 18;
 
 export type SortKey =
   | "popular"

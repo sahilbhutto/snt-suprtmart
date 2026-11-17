@@ -1,8 +1,6 @@
 import type { IconType } from "react-icons";
 export type Tint = 1 | 2 | 3 | 4 | 5 | 6;
 
-export type CartState = Record<string, number>;
-
 export type TrendingTab = "trending" | "new" | "top-rated" | "under-500";
 
 export type PromoTone = "ink" | "tint2" | "tint3" | "tint4";
@@ -99,20 +97,6 @@ export interface Aisle {
   icon: IconType;
   tint: Tint;
   productCount: number;
-  brands: string[];
   image?: string;
   links: AisleLink[];
 }
-
-// Re-export category list item for older imports
-export type {
-  CategoryListItem as CategoryItem,
-  CategoryListItem,
-  Category,
-} from "../features/categories/types/categories.types";
-
-// Re-export product types for older imports
-export type {
-  Product,
-  ProductListItem,
-} from "../features/products/types/products.types";

@@ -5,11 +5,11 @@ import Badge from "../../../components/ui/Badge";
 import { cn } from "../../../lib/cn";
 import { formatCount, formatPrice } from "../../../lib/format";
 import type { CategoryListItem } from "../types/categories.types";
-import type { CategoryProductsState } from "../hooks/useCategoryProducts";
+import type { ProductFiltersState } from "../../products/hooks/useProductFilters";
 
 interface CategoryHeroProps {
   category: CategoryListItem;
-  f: CategoryProductsState;
+  f: ProductFiltersState;
 }
 
 const CategoryHero = ({ category, f }: CategoryHeroProps) => {

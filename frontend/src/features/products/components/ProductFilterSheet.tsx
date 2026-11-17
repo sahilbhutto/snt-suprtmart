@@ -3,9 +3,9 @@ import { createPortal } from "react-dom";
 import { LuX } from "react-icons/lu";
 import type { ProductFiltersState } from "../hooks/useProductFilters";
 import { cn } from "../../../lib/cn";
-import ProductFilters from "./ProductFilters";
 import Button from "../../../components/ui/Button";
 import { formatCount } from "../../../lib/format";
+import ProductFilters from "./ProductFilters";
 
 interface ProductFilterSheetProps {
   open: boolean;

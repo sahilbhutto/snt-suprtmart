@@ -48,7 +48,7 @@ const ProductTabs = ({ product, reviews, summary, active, onChange }: ProductTab
 
   const description =
     product.description ??
-    `Buy ${product.name} (${product.unit}) online from SNT Supermart. ${product.brand.name} quality, checked before dispatch and delivered in 2 hours.`;
+    `Buy ${product.name} (${product.unit}) online from SNT Supermart. quality, checked before dispatch and delivered in 2 hours.`;
 
   return (
     <section id="product-tabs" aria-label="Product information" className="scroll-mt-24 rounded-3xl border border-border bg-surface p-5 shadow-card sm:p-8">
@@ -98,9 +98,6 @@ const ProductTabs = ({ product, reviews, summary, active, onChange }: ProductTab
 
         {active === "details" && (
           <dl className="max-w-3xl">
-            <Row label="Brand">
-              <Link to={`/products?brand=${product.brand.slug}`} className="text-link hover:underline">{product.brand.name}</Link>
-            </Row>
             <Row label="Category">
               <Link to={`/category/${product.category.slug}`} className="text-link hover:underline">{product.category.name}</Link>
             </Row>

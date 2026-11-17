@@ -1,13 +1,8 @@
 import { Link } from "react-router-dom";
-import { LuSearch, LuTruck, LuX } from "react-icons/lu";
+import { LuTruck } from "react-icons/lu";
 import Badge from "../../../components/ui/Badge";
 import { categoryItems } from "../hooks/useCategoryFilters";
 import rightSideImg from "../../../assets/images/all-categories-shopping.png";
-
-interface CategoriesHeroProps {
-  q: string;
-  onQueryChange: (value: string) => void;
-}
 
 const stats = [
   { value: `${categoryItems.length}`, label: "categories" },
@@ -15,7 +10,7 @@ const stats = [
   { value: "2 hrs", label: "delivery" },
 ];
 
-const CategoriesHero = ({ q, onQueryChange }: CategoriesHeroProps) => {
+const CategoriesHero = () => {
   return (
     <section aria-labelledby="categories-title">
       <div className="relative overflow-hidden rounded-2x; bg-ink p-6 text-ink-foreground ring-1 ring-ink-border sm:rounded-[2.25rem] sm:p-10 lg:p-14">
@@ -32,7 +27,7 @@ const CategoriesHero = ({ q, onQueryChange }: CategoriesHeroProps) => {
           <div className="grid gap-5">
             <nav
               aria-label="Breadcrumb"
-              className="flex items-center gap-2 text-xs text-ink-muted"
+              className="flex md:-top-12 relative items-center gap-2 text-xs text-ink-muted"
             >
               <Link to="/" className="transition hover:text-ink-foreground">
                 Home
@@ -74,34 +69,6 @@ const CategoriesHero = ({ q, onQueryChange }: CategoriesHeroProps) => {
               Explore every aisle of our store. Pick a category to see all its
               products, prices and offers.
             </p>
-
-            <form
-              role="search"
-              onSubmit={(e) => e.preventDefault()}
-              className="flex w-full max-w-xl items-center gap-1 rounded-full bg-white p-1.5 shadow-pop"
-            >
-              <LuSearch
-                className="ms-3 shrink-0 text-neutral-500"
-                aria-hidden
-              />
-              <input
-                value={q}
-                onChange={(e) => onQueryChange(e.target.value)}
-                aria-label="Search categories"
-                placeholder="Find a category, e.g. Sea Food"
-                className="h-11 min-w-0 flex-1 bg-transparent px-2 text-sm text-neutral-900 outline-none placeholder:text-neutral-500"
-              />
-              {q && (
-                <button
-                  type="button"
-                  onClick={() => onQueryChange("")}
-                  aria-label="Clear search"
-                  className="grid size-9 shrink-0 aspect-square place-items-center rounded-full text-neutral-500 transition hover:bg-neutral-100"
-                >
-                  <LuX size={16} />
-                </button>
-              )}
-            </form>
 
             <dl className="flex flex-wrap gap-x-8 gap-y-3 border-t border-ink-border pt-5">
               {stats.map((s) => (

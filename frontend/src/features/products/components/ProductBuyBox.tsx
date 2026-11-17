@@ -85,12 +85,6 @@ const ProductBuyBox = ({ product, ctaRef, onSeeReviews }: ProductBuyBoxProps) =>
       {/* Title */}
       <div className="grid gap-3">
         <div className="flex flex-wrap items-center gap-2 text-sm">
-          <Link
-            to={`/products?brand=${product.brand.slug}`}
-            className="font-bold text-link hover:underline"
-          >
-            {product.brand.name}
-          </Link>
           <span aria-hidden className="text-muted-foreground">·</span>
           <Link to={`/category/${product.category.slug}`} className="text-muted-foreground hover:text-foreground hover:underline">
             {product.category.name}

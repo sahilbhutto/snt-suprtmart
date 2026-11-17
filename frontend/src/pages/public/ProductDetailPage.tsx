@@ -30,7 +30,7 @@ const ProductNotFound = () => (
 
 
 const ProductDetailContent = ({ data }: { data: ProductDetailData }) => {
-  const { product, categoryProducts, brandProducts, bestSellers, reviews, summary } = data;
+  const { product, categoryProducts, bestSellers, reviews, summary } = data;
 
   const [tab, setTab] = useState<ProductTabKey>("description");
   const [showBar, setShowBar] = useState(false);
@@ -58,10 +58,10 @@ const ProductDetailContent = ({ data }: { data: ProductDetailData }) => {
     <div className="pb-28 lg:pb-12">
       <Container className="grid gap-8 pt-4 sm:gap-10 sm:pt-6">
         {/* Breadcrumb */}
-        <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+        <nav aria-label="Breadcrumb" className="hidden md:flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
           <Link to="/" className="transition hover:text-foreground">Home</Link>
           <span aria-hidden>/</span>
-          <Link to="/products" className="transition hover:text-foreground">All products</Link>
+          <Link to="/products" className="transition hover:text-foreground">Products</Link>
           <span aria-hidden>/</span>
           <Link to={`/category/${product.category.slug}`} className="transition hover:text-foreground">{product.category.name}</Link>
           <span aria-hidden>/</span>
@@ -88,13 +88,6 @@ const ProductDetailContent = ({ data }: { data: ProductDetailData }) => {
         ) : (
           <ProductShelf title="Best sellers" products={bestSellers} actionLabel="See all" actionTo="/products" />
         )}
-
-        <ProductShelf
-          title={`More from ${product.brand.name}`}
-          products={brandProducts}
-          actionLabel="See all"
-          actionTo={`/products?brand=${product.brand.slug}`}
-        />
       </Container>
 
       <ProductStickyBar product={product} visible={showBar} />
@@ -106,7 +99,6 @@ const ProductDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const data = useProduct(slug);
 
-  // key resets the quantity, tabs and gallery when you move to another product
   return data ? <ProductDetailContent key={data.product.id} data={data} /> : <ProductNotFound />;
 };
 

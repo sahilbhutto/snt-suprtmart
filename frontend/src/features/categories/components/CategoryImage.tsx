@@ -1,3 +1,5 @@
+
+import { LuShoppingBasket } from "react-icons/lu";
 import { cn } from "../../../lib/cn";
 import { tintBg } from "../../../lib/format";
 import { getCollectionStyle } from "../../catalog/category.ui";
@@ -12,14 +14,12 @@ const CategoryImage = ({
   className?: string;
 }) => {
   const style = getCollectionStyle(category.collectionSlug);
-  const Icon = category.icon ?? style.icon;
   const tint = style.tint;
 
-  // support both string URL and { url, alt }
   const imageUrl =
-    typeof category.image === "string"
+    typeof category.image === "string" && category.image.trim()
       ? category.image
-      : category?.image;
+      : null;
 
   return (
     <div
@@ -29,13 +29,20 @@ const CategoryImage = ({
         className,
       )}
     >
-      <ImageWithFallback
-        src={imageUrl}
-        alt={category.name}
-        width={300}
-        height={300}
-        fallback={<Icon className="size-1/3 text-foreground/70" aria-hidden />}
-      />
+      {imageUrl ? (
+        <ImageWithFallback
+          src={imageUrl}
+          alt={category.name}
+          width={300}
+          height={300}
+          fallback={<LuShoppingBasket className="size-1/3 text-foreground/70" />}
+        />
+      ) : (
+        <LuShoppingBasket
+          aria-label={category.name}
+          className="size-1/3 text-foreground/70"
+        />
+      )}
     </div>
   );
 };

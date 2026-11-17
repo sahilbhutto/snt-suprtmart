@@ -18,4 +18,3 @@ export const footerColumns: FooterColumn[] = [
   ] },
 ];
 
-export const paymentMethods = ["COD", "Easypaisa", "JazzCash", "Visa", "Mastercard"];
