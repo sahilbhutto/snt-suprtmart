@@ -1,27 +1,30 @@
+import { useEffect } from "react";
+import { Navigate, useLocation } from "react-router-dom";
+import AuthShell from "../../features/auth/components/AuthShell";
+import LoginForm from "../../features/auth/components/LoginForm";
 import { useAuthStore } from "../../features/auth/store/authStore";
 
 const LoginPage = () => {
-  const signIn = useAuthStore((state) => state.signIn);
+  const user = useAuthStore((s) => s.user);
+  const location = useLocation();
+  const from = (location.state as { from?: string } | null)?.from ?? "/";
 
-  const handleLogin = () => {
-    signIn({
-      id: "user-001",
-      fullName: "Sahil Ali Bhutto",
-      phone: "03001234567",
-      email: "sahil@example.com",
-    });
+  useEffect(() => {
+    document.title = "Sign in | SNT Supermart";
+  }, []);
 
-    console.log("Logged in:", useAuthStore.getState().user);
-  };
+  // Already signed in and verified
+  if (user?.is_verify) return <Navigate to={from} replace />;
 
   return (
-    <button
-      type="button"
-      onClick={handleLogin}
-      className="rounded-lg bg-green-600 px-5 py-3 text-white"
-    >
-      Login as Demo User
-    </button>
+    <AuthShell>
+      <header className="grid gap-2">
+        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Welcome back</h1>
+        <p className="text-muted-foreground">Sign in with your mobile number. No password needed.</p>
+      </header>
+
+      <LoginForm />
+    </AuthShell>
   );
 };
 
