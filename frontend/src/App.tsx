@@ -12,9 +12,18 @@ import CheckoutPage from "./pages/public/CheckoutPage";
 import OrderSuccessPage from "./pages/public/OrderSuccessPage";
 import RequireAuth from "./features/auth/components/RequireAuth";
 import LoginPage from "./pages/public/LoginPage";
+import RegisterPage from "./pages/public/RegisterPage";
+import VerifyPhonePage from "./pages/public/VerifyPhonePage";
 
 const App = () => (
   <Routes>
+
+    {/* Start Auth Routes */}
+    <Route path="register" element={<RegisterPage />} />
+    <Route path="verify-phone" element={<VerifyPhonePage />} />
+    <Route path="login" element={<LoginPage />} />
+    {/* End Auth Routes */}
+
     {/* Start Main Public Layout */}
     <Route element={<MainLayout />}>
       <Route index element={<HomePage />} />
@@ -25,7 +34,6 @@ const App = () => (
       <Route path="cart" element={<CartPage />} />
       <Route path="checkout" element={<CheckoutPage />} />
 
-      <Route path="login" element={<LoginPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Route>
     {/* End Main Public Layout */}
@@ -38,7 +46,7 @@ const App = () => (
       </Route>
     </Route>
     {/* End Checkout Layout */}
-    
+
   </Routes>
 );
 
